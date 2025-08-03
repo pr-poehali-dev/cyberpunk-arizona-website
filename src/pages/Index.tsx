@@ -49,6 +49,24 @@ const Index = () => {
     { name: "SynthWave", level: 82, faction: "Киберпанки" }
   ];
 
+  const serverStats = [
+    { label: "Игроков онлайн", value: "2,847", icon: "Users", trend: "+127", color: "text-green-400" },
+    { label: "Пиковый онлайн", value: "3,245", icon: "TrendingUp", trend: "сегодня", color: "text-primary" },
+    { label: "Всего игроков", value: "147,829", icon: "Globe", trend: "+1,234", color: "text-blue-400" },
+    { label: "Активных фракций", value: "24", icon: "Shield", trend: "+2", color: "text-purple-400" }
+  ];
+
+  const dailyActivity = [
+    { time: "00:00", players: 1420 },
+    { time: "03:00", players: 980 },
+    { time: "06:00", players: 1250 },
+    { time: "09:00", players: 2100 },
+    { time: "12:00", players: 2847 },
+    { time: "15:00", players: 3100 },
+    { time: "18:00", players: 3245 },
+    { time: "21:00", players: 2950 }
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-slate-900 to-background">
       {/* Navigation */}
@@ -144,6 +162,82 @@ const Index = () => {
               </Card>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Statistics Section */}
+      <section className="py-16 px-4 bg-gradient-to-r from-background via-slate-800/20 to-background">
+        <div className="container mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4 text-primary">Статистика сервера</h2>
+            <p className="text-muted-foreground">Актуальные данные активности и метрики игроков</p>
+          </div>
+          
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            {serverStats.map((stat, index) => (
+              <Card key={index} className="bg-card/50 border-primary/20 hover:border-primary/40 transition-all">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="p-2 bg-primary/20 rounded-lg">
+                      <Icon name={stat.icon} size={24} className="text-primary" />
+                    </div>
+                    <span className={`text-sm font-medium ${stat.color}`}>
+                      {stat.trend}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-foreground mb-1">{stat.value}</p>
+                    <p className="text-sm text-muted-foreground">{stat.label}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Activity Chart */}
+          <Card className="bg-card/50 border-primary/20">
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Icon name="Activity" className="mr-2 text-primary" />
+                Активность игроков за сутки
+              </CardTitle>
+              <CardDescription>Количество игроков онлайн по часам</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="h-64 relative">
+                <div className="absolute inset-0 flex items-end justify-between space-x-2">
+                  {dailyActivity.map((point, index) => {
+                    const height = (point.players / 3500) * 100;
+                    const isActive = index === 6; // Peak hour
+                    return (
+                      <div key={index} className="flex-1 flex flex-col items-center">
+                        <div className="relative group cursor-pointer">
+                          <div 
+                            className={`w-full rounded-t-lg transition-all duration-300 ${
+                              isActive 
+                                ? 'bg-gradient-to-t from-primary to-secondary shadow-lg shadow-primary/30' 
+                                : 'bg-gradient-to-t from-primary/60 to-primary/80 hover:from-primary hover:to-secondary'
+                            }`}
+                            style={{ height: `${height}%`, minHeight: '20px' }}
+                          ></div>
+                          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-card border border-primary/20 px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                            {point.players.toLocaleString()}
+                          </div>
+                        </div>
+                        <span className="text-xs text-muted-foreground mt-2">{point.time}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+              <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">
+                <span>Минимум: 980</span>
+                <span>Среднее: 2,235</span>
+                <span>Пик: 3,245</span>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
